@@ -61,9 +61,24 @@ makeModel <- function(method) {
     print(fit$finalModel)
     fit
 }
-# fitRpart <- makeModel("rpart")
+fitRpart <- makeModel("rpart")
+fitRDA <- makeModel("rda")
+fitTreebag <- makeModel("treebag")
+
+accuracyLevels <- function(fit) {
+    acc <- data.frame()
+    for (l in levels(knownTest$classe)) {
+        a <- sum(predict(fit, knownTest[knownTest$classe==l,]) == l) / nrow(knownTest[knownTest$classe==l,])
+        acc <- rbind(acc, data.frame(classe=l, acc=a))
+    }
+    print(acc)
+    acc
+}
+
+accRpart <- accuracyLevels(fitRpart)
+accRDA <- accuracyLevels(fitRDA)
+accTreebag <- accuracyLevels(fitTreebag)
 # predict(fitRpart, tail(knownTest), type="prob")
 # resamps <- resamples(list(Rpart=fitRpart))
 # set.seed(SEED) ; fitSVM <- train(classe ~ ., data=knownTrain, method="svmRadial")
-fitRDA <- makeModel("rda")
 # testing <- loadAndScrub(TESTING_PATH, names(known))
