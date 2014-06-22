@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Practical Machine Learning Project</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>Practical Machine Learning Project</h1>
+
+<p><em>Author:</em> Rick Osborne
+<em>Date:</em> 2014-06-22</p>
+
+<p>This writeup covers my analysis of the <a href="http://groupware.les.inf.puc-rio.br/har">Human Activity Recognition dataset</a> for the Practical Machine Learning course offered by the Johns Hopkins University School of Biostatistics and Coursera.</p>
+
+<h2>Data Preparation</h2>
+
+<p>I found that the dataset needed significant cleanup before it was ready for use.  The source CSV had 160 columns, but many of them did not have usable data.</p>
+
+<ol>
+<li><p>I eliminated any summary rows (<code>new_window == &quot;yes&quot;</code>), as they were not mirrored in the testing dataset.</p></li>
+<li><p>I eliminated the non-numeric columns, such as <code>user_name</code>, <code>num_window</code>, etc.</p></li>
+<li><p>I eliminated columns that did not have non-<code>NA</code> values.</p></li>
+</ol>
+
+<p>Overall, this cleanup reduced the column count to 53.</p>
+
+<h3>Cross Validation</h3>
+
+<p>For the most part I let the Caret package worry about subsampling, but to get an estimate of the out-of-sample error I split the dataset 70/30 into training and testing datasets.  When using training <code>method = &quot;rpart&quot;</code>, this produced a model that was little better than 50% accurate against the testing dataset.</p>
+
+<h3>Model Selection</h3>
+
+<p>Because the result (<code>classe</code>) is a factor variable, I initially chose to use a tree-based model (<code>method = &quot;rpart&quot;</code>).  This trained relatively quickly, but I found its accuracy was very dependant on the initial training/testing data selection, and would not produce leaves for entire factors.  For example, on one run it did not have a classifier for a &ldquo;D&rdquo; result.</p>
+
+<p>I then tried to let Caret choose a model by not specifying a method.  Caret attempted to create a random forest model, but I was forced to kill the R process after it trained for an hour without producing a result.</p>
+
+<p>I then tried several other models by specifying them explicitly, but the following took too long to train and were discarded: Bagged CART (<code>treebag</code>), Parallel Random Forest (<code>parRF</code>), Conditional Inference Random Forest (<code>cforest</code>), Support Vector Machines with Radial Basis Function Kernel (<code>svmRadial</code>).</p>
+
+<h2>Result</h2>
+
+<p>The best accuracy I could get was ~50%.  As random choice would provide ~20% accuracy, this is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.</p>
+
+<p>When broken down by result, I discovered that the CART model was far more accurate for some results than others:</p>
+
+<table><thead>
+<tr>
+<th align="center">Result</th>
+<th align="center">Accuracy</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="center">A</td>
+<td align="center">91%</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">33%</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">43%</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">24%</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">44%</td>
+</tr>
+</tbody></table>
+
+<p>Had I been able to generate more models before the deadline, I believe I could have generated a composite model by weighting the measured accuracies according to the different results.</p>
+
+</body>
+
+</html>
+
