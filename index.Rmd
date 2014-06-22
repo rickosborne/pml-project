@@ -29,6 +29,8 @@ I then tried to let Caret choose a model by not specifying a method.  Caret atte
 
 My next successful model used RDA. Though it took more than a wall-clock hour using 7 CPU cores, it was far more accurate than the CART model.  And interestingly, the saved version of the RDA model takes up almost an order of magnitude less disk space than the CART model.
 
+The third successful model was a Bagged CART model that provided better than 97% accuracy for each result factor.
+
 I then tried several other models by specifying them explicitly, but the following took too long to train and were discarded: Parallel Random Forest (`parRF`), Conditional Inference Random Forest (`cforest`), Support Vector Machines with Radial Basis Function Kernel (`svmRadial`).
 
 ## Result
