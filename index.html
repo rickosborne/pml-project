@@ -177,41 +177,47 @@ hr {
 
 <h2>Result</h2>
 
-<p>The best accuracy I could get was ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.</p>
+<p>The best accuracy I could get was 98.7% with a Bagged CART model, followed by ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.</p>
 
-<p>When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result:</p>
+<p>When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result.  But then when upgraded to a Bagged CART the accuracy was truly impressive:</p>
 
 <table><thead>
 <tr>
 <th align="center">Result</th>
 <th align="center">CART</th>
 <th align="center">RDA</th>
+<th align="center">Bagged CART</th>
 </tr>
 </thead><tbody>
 <tr>
 <td align="center">A</td>
 <td align="center">91%</td>
 <td align="center">94%</td>
+<td align="center">99.5%</td>
 </tr>
 <tr>
 <td align="center">B</td>
 <td align="center">33%</td>
 <td align="center">81%</td>
+<td align="center">98.6%</td>
 </tr>
 <tr>
 <td align="center">C</td>
 <td align="center">43%</td>
 <td align="center">94%</td>
+<td align="center">98.2%</td>
 </tr>
 <tr>
 <td align="center">D</td>
 <td align="center">24%</td>
 <td align="center">83%</td>
+<td align="center">97.4%</td>
 </tr>
 <tr>
 <td align="center">E</td>
 <td align="center">44%</td>
 <td align="center">91%</td>
+<td align="center">99.2%</td>
 </tr>
 </tbody></table>
 

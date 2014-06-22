@@ -19,7 +19,7 @@ Overall, this cleanup reduced the column count to 53.
 
 ### Cross Validation
 
-For the most part I let the Caret package worry about subsampling, but to get an estimate of the out-of-sample error I split the dataset 70/30 into training and testing datasets.  When using training `method = "rpart"`, this produced a model that was little better than 50% accurate against the testing dataset.
+For the most part I let the Caret package worry about subsampling, but to get an estimate of the out-of-sample error I split the dataset 70/30 into training and testing datasets.  I tried some of the other cross-validation options, including bootstrap, adaptive bootstrap, etc, but they did not seem to have an impact on the accuracy of the predictions for each model.
 
 ### Model Selection
 
@@ -29,20 +29,19 @@ I then tried to let Caret choose a model by not specifying a method.  Caret atte
 
 My next successful model used RDA. Though it took more than a wall-clock hour using 7 CPU cores, it was far more accurate than the CART model.  And interestingly, the saved version of the RDA model takes up almost an order of magnitude less disk space than the CART model.
 
-I then tried several other models by specifying them explicitly, but the following took too long to train and were discarded: Bagged CART (`treebag`), Parallel Random Forest (`parRF`), Conditional Inference Random Forest (`cforest`), Support Vector Machines with Radial Basis Function Kernel (`svmRadial`).
+I then tried several other models by specifying them explicitly, but the following took too long to train and were discarded: Parallel Random Forest (`parRF`), Conditional Inference Random Forest (`cforest`), Support Vector Machines with Radial Basis Function Kernel (`svmRadial`).
 
 ## Result
 
-The best accuracy I could get was ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.
+The best accuracy I could get was 98.7% with a Bagged CART model, followed by ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.
 
-When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result:
+When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result.  But then when upgraded to a Bagged CART the accuracy was truly impressive:
 
-|Result|CART|RDA|
-|:-:|:---:|:---:|
-| A | 91% | 94% |
-| B | 33% | 81% |
-| C | 43% | 94% |
-| D | 24% | 83% |
-| E | 44% | 91% |
+|Result|CART|RDA|Bagged CART|
+|:-:|:---:|:---:|:-----:|
+| A | 91% | 94% | 99.5% |
+| B | 33% | 81% | 98.6% |
+| C | 43% | 94% | 98.2% |
+| D | 24% | 83% | 97.4% |
+| E | 44% | 91% | 99.2% |
 
-Had I been able to generate more models before the deadline, I believe I could have generated a composite model by weighting the predictions according to the different measured accuracies.

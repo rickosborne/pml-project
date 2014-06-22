@@ -14,6 +14,8 @@ TRAINING_FILE <- "pml-training.csv"
 TESTING_FILE <- "pml-testing.csv"
 TRAINING_PATH <- file.path(DATA_DIR, TRAINING_FILE)
 TESTING_PATH <- file.path(DATA_DIR, TESTING_FILE)
+PREDICT_DIR <- "predict"
+if (!file.exists(PREDICT_DIR)) dir.create(PREDICT_DIR)
 if (!file.exists(TRAINING_PATH)) download.file(TRAINING_URL, TRAINING_PATH, "curl")
 if (!file.exists(TESTING_PATH)) download.file(TESTING_URL, TESTING_PATH, "curl")
 SEED <- 20140622
@@ -82,3 +84,17 @@ accTreebag <- accuracyLevels(fitTreebag)
 # resamps <- resamples(list(Rpart=fitRpart))
 # set.seed(SEED) ; fitSVM <- train(classe ~ ., data=knownTrain, method="svmRadial")
 # testing <- loadAndScrub(TESTING_PATH, names(known))
+
+pml_write_files <- function(model, data){
+    predictions <- data.frame()
+    for(problemId in 1:nrow(data)){
+        prediction <- predict(model, data[data$problem_id==problemId,])
+        filename = paste0("problem_id_", problemId, ".txt")
+        write.table(prediction,file=file.path(PREDICT_DIR,filename),quote=FALSE,row.names=FALSE,col.names=FALSE,eol="")
+        predictions <- rbind(predictions, data.frame(problem_id=problemId, prediction=prediction))
+    }
+    print(predictions)
+}
+
+unknown <- loadAndScrub(TESTING_PATH, c("problem_id", names(known)))
+pml_write_files(fitTreebag, unknown)

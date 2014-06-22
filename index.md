@@ -33,16 +33,16 @@ I then tried several other models by specifying them explicitly, but the followi
 
 ## Result
 
-The best accuracy I could get was ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.
+The best accuracy I could get was 98.7% with a Bagged CART model, followed by ~89% with an RDA model and ~52% with a CART model.  As random choice would provide ~20% accuracy, the CART model is an improvement, but not a great one.  Had I been more proactive and started the assignment sooner, I would have tried and compared many more models.
 
-When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result:
+When broken down by result factor, I discovered that the CART model was far more accurate for some results than others, while still being less accurate than the RDA model for even its most accurate result.  But then when upgraded to a Bagged CART the accuracy was truly impressive:
 
-|Result|CART|RDA|
-|:-:|:---:|:---:|
-| A | 91% | 94% |
-| B | 33% | 81% |
-| C | 43% | 94% |
-| D | 24% | 83% |
-| E | 44% | 91% |
+|Result|CART|RDA|Bagged CART|
+|:-:|:---:|:---:|:-----:|
+| A | 91% | 94% | 99.5% |
+| B | 33% | 81% | 98.6% |
+| C | 43% | 94% | 98.2% |
+| D | 24% | 83% | 97.4% |
+| E | 44% | 91% | 99.2% |
 
 Had I been able to generate more models before the deadline, I believe I could have generated a composite model by weighting the predictions according to the different measured accuracies.
